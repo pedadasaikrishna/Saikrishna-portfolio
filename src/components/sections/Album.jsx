@@ -1,0 +1,259 @@
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { hackathons } from '../../data/imagesforalbum';
+import { styled, ThemeProvider } from 'styled-components';
+import { darkTheme } from '../../utils/Themes';
+
+const AlbumContainer = styled.div`
+  width: 90%;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: rgba(17, 25, 40, 0.95);
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  transition: all 0.3s ease;
+
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 1rem;
+  }
+`;
+
+const AlbumTitle = styled.h1`
+  font-size: 2rem;
+  font-weight: 400;
+  background: white;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  letter-spacing: 1px;
+  text-shadow: 0 0 15px rgb(255, 255, 255);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  opacity: 0.95;
+
+  &:hover {
+    transform: scale(1.03);
+    opacity: 1;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 2.4rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 2rem;
+  }
+`;
+
+const AlbumImages = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(${({ $minWidth }) => $minWidth}, 1fr));
+  gap: 1.5rem;
+  transition: all 0.3s ease;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  @media (max-width: 480px) {
+    gap: 0.75rem;
+  }
+`;
+
+const AlbumImageWrapper = styled.div`
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  &:hover div {
+    opacity: 1;
+  }
+`;
+
+const AlbumImage = styled.img`
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
+  transition: transform 0.5s ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+`;
+
+const Overlay = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.5rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+`;
+
+const StyledHR = styled.hr`
+  border: none;
+  height: 3px;
+  width: 80%;
+  background: linear-gradient(
+    90deg,
+    #4f46e5, #6ee7b7, #facc15, #fb7185, #38bdf8, #a78bfa, #4f46e5
+  );
+  background-size: 300%;
+  animation: gradient-move 2s linear infinite;
+  margin: 1.5rem auto;
+  border-radius: 50px;
+
+  @keyframes gradient-move {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+`;
+
+const Body = styled.div`
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  width: 100%;
+  background: ${({ theme }) => theme.bg};
+  color: ${({ theme }) => theme.text_primary};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+`;
+
+const ImageModal = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: zoom-out;
+`;
+
+const ModalImage = styled.img`
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 10px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+`;
+
+const CloseButton = styled.button`
+  position: fixed;
+  top: 1.5rem;
+  right: 2rem;
+  background: transparent;
+  border: none;
+  font-size: 2.0rem;
+  color: #fff;
+  cursor: pointer;
+  z-index: 1100;
+  // font-weight: bold;
+  transition: transform 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    transform: scale(1.2);
+    color: #ff4d4d;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 77, 77, 0.6);
+  }
+
+  @media (max-width: 480px) {
+    font-size: 2rem;
+    top: 1rem;
+    right: 1.2rem;
+  }
+`;
+
+const Album = () => {
+  const { hackathonName } = useParams();
+  const images = hackathons[hackathonName] || [];
+  const [imageSize, setImageSize] = useState(hackathons[`${hackathonName}Size`] || ['300px', 'auto']);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        setImageSize(hackathons[`${hackathonName}SizeSmall`] || ['150px', 'auto']);
+      } else {
+        setImageSize(hackathons[`${hackathonName}Size`] || ['300px', 'auto']);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize();
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, [hackathonName]);
+
+  const closeModal = () => setSelectedImage(null);
+
+  return (
+    <ThemeProvider theme={darkTheme}>
+      <Body>
+        <AlbumContainer>
+          <AlbumTitle>{hackathonName} Album</AlbumTitle>
+          <StyledHR />
+          <AlbumImages $minWidth={imageSize[0]}>
+            {images.map((imageUrl, index) => (
+              <AlbumImageWrapper key={index} onClick={() => setSelectedImage(imageUrl)}>
+                <AlbumImage src={imageUrl} alt={`hackathon-image-${index}`} />
+                <Overlay>Image {index + 1}</Overlay>
+              </AlbumImageWrapper>
+            ))}
+          </AlbumImages>
+        </AlbumContainer>
+
+        {selectedImage && (
+          <>
+            <ImageModal onClick={closeModal}>
+              <ModalImage src={selectedImage} alt="Enlarged" onClick={(e) => e.stopPropagation()} />
+            </ImageModal>
+            <CloseButton onClick={closeModal} aria-label="Close modal">✖</CloseButton>
+
+          </>
+        )}
+      </Body>
+    </ThemeProvider>
+  );
+};
+
+export default Album;

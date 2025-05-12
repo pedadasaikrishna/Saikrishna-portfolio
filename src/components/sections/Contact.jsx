@@ -1,0 +1,262 @@
+
+
+import React, { useRef, useState } from "react";
+import styled, { keyframes } from "styled-components";
+import emailjs from "@emailjs/browser";
+ import axios from "axios";
+
+// Animations
+const fadeIn = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
+`;
+
+// const shake = keyframes`
+//   0%, 100% { transform: translateX(0); }
+//   25% { transform: translateX(-5px); }
+//   75% { transform: translateX(5px); }
+// `;
+
+const scaleUp = keyframes`
+  0% { transform: scale(0.9); }
+  100% { transform: scale(1); }
+`;
+
+// Styled Components
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+  @media (max-width: 768px) {
+    padding: 20px;
+  }
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1100px;
+  gap: 12px;
+  align-items: center;
+  animation: ${fadeIn} 1s ease-in;
+  @media (max-width: 768px) {
+    padding: 10px;
+  }
+`;
+
+const Title = styled.h1`
+  font-size: 52px;
+  text-align: center;
+  font-weight: 600;
+  margin-top: 20px;
+  color: ${({ theme }) => theme.text_primary};
+  animation: ${scaleUp} 0.7s ease-in-out;
+  @media (max-width: 768px) {
+    font-size: 36px;
+    margin-top: 12px;
+  }
+`;
+
+const Desc = styled.p`
+  font-size: 18px;
+  text-align: center;
+  font-weight: 600;
+  color: ${({ theme }) => theme.text_secondary};
+  margin-bottom: 40px;
+  @media (max-width: 768px) {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+`;
+
+const ContactForm = styled.form`
+  width: 95%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(17, 25, 40, 0.83);
+  border: 1px solid rgba(255, 255, 255, 0.125);
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: rgba(23, 92, 230, 0.1) 0px 4px 24px;
+  animation: ${fadeIn} 0.5s ease-in-out;
+  gap: 16px;
+  @media (max-width: 768px) {
+    padding: 20px;
+  }
+`;
+
+const ContactInput = styled.input`
+  background-color: transparent;
+  border: 1px solid ${({ theme }) => theme.text_secondary + 50};
+  outline: none;
+  font-size: 18px;
+  color: ${({ theme }) => theme.text_primary};
+  border-radius: 12px;
+  padding: 12px 16px;
+  transition: border 0.3s, box-shadow 0.3s;
+  &:focus {
+    border: 1px solid ${({ theme }) => theme.primary};
+    box-shadow: 0 0 8px ${({ theme }) => theme.primary + "50"};
+    animation: ${scaleUp} 0.3s ease-out;
+  }
+  @media (max-width: 768px) {
+    font-size: 16px;
+    padding: 10px 14px;
+  }
+`;
+
+const ContactInputMessage = styled(ContactInput).attrs({ as: "textarea" })`
+  resize: none;
+  @media (max-width: 768px) {
+    font-size: 16px;
+    padding: 10px 14px;
+  }
+`;
+
+const ContactButton = styled.button`
+  background: hsla(271, 100%, 50%, 1);
+  padding: 13px 16px;
+  border-radius: 12px;
+  border: none;
+  color: ${({ theme }) => theme.text_primary};
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s;
+  &:hover {
+    background-color: hsla(271, 100%, 45%, 1);
+    transform: translateY(-2px);
+  }
+  &:active {
+    transform: scale(0.98);
+  }
+  &[disabled] {
+    background-color: grey;
+    cursor: not-allowed;
+  }
+  @media (max-width: 768px) {
+    font-size: 16px;
+    padding: 10px 14px;
+  }
+`;
+
+const Heading = styled.h1`
+  text-align: center;
+  color: ${({ theme }) => theme.primary};
+  font-size: 24px;
+  @media (max-width: 768px) {
+    font-size: 18px;
+  }
+`;
+
+// const StatusMessage = styled.div`
+//   color: ${({ isSuccess }) => (isSuccess ? "#4caf50" : "#f44336")};
+//   font-size: 16px;
+//   text-align: center;
+//   margin-top: 20px;
+//   animation: ${shake} 0.3s ease-in-out;
+//   @media (max-width: 768px) {
+//     font-size: 14px;
+//   }
+// `;
+// Filtering the `isSuccess` prop
+const StatusMessage = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'isSuccess',
+})`
+  background-color: ${(props) => (props.isSuccess ? 'green' : 'red')};
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+`;
+const Contact = () => {
+  const form = useRef();
+  const [statusMessage, setStatusMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsSubmitting(true);
+
+  const formData = {
+    from_email: form.current.from_email.value,
+    from_name: form.current.from_name.value,
+    subject: form.current.subject.value,
+    message: form.current.message.value,
+  };
+
+  try {
+    // 1. Save to MongoDB
+    await axios.post("http://localhost:5000/contact", formData);
+
+    // 2. Send email via EmailJS
+    await emailjs.sendForm(
+      "service_vw2a5qb",
+      "template_11miw95",
+      form.current,
+      "7hW1qWdtrW8zERMVZ"
+    );
+
+    setStatusMessage("Message Sent Successfully! 🎉");
+    form.current.reset();
+  } catch (error) {
+    console.error("Error:", error);
+    setStatusMessage("Failed to send message. Please try again later.");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
+  return (
+    <Container id="Contact">
+      <Wrapper>
+        <Title>Contact</Title>
+        <Desc>
+          📬 Don’t hesitate to get in touch! Whether you have questions, ideas,
+          or opportunities, I’m just a message away! ✨
+        </Desc>
+
+        <ContactForm ref={form} onSubmit={handleSubmit}>
+          <Heading>Enter details to Contact Me</Heading>
+          <ContactInput
+            type="email"
+            placeholder="Your Email"
+            name="from_email"
+            required
+          />
+          <ContactInput
+            type="text"
+            placeholder="Your Name"
+            name="from_name"
+            required
+          />
+          <ContactInput
+            type="text"
+            placeholder="Subject"
+            name="subject"
+            required
+          />
+          <ContactInputMessage
+            placeholder="Message"
+            name="message"
+            rows="4"
+            required
+          />
+          <ContactButton type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Sending..." : "Send"}
+          </ContactButton>
+          {statusMessage && (
+            <StatusMessage isSuccess={statusMessage.includes("Successfully")}>
+              {statusMessage}
+            </StatusMessage>
+          )}
+        </ContactForm>
+      </Wrapper>
+    </Container>
+  );
+};
+
+export default Contact;

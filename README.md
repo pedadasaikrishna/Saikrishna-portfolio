@@ -107,7 +107,7 @@ npm run deploy
 
 - 🔗 GitHub: [https://github.com/pedadasaikrishna](https://github.com/pedadasaikrishna)  
 - 🌐 Portfolio: [https://saikrishnapedada.netlify.app](https://saikrishnapedada.netlify.app)  
-- 📧 Email: *Add your email here*  
+- 📧 Email: psk12052005@gmail.com 
 
 ---
 

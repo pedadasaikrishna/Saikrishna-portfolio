@@ -190,7 +190,7 @@ const handleSubmit = async (e) => {
 
   try {
     // 1. Save to MongoDB
-    await axios.post("http://localhost:5000/contact", formData);
+    await axios.post("https://saikrishna-portfolio.onrender.com/contact", formData);
 
     // 2. Send email via EmailJS
     await emailjs.sendForm(

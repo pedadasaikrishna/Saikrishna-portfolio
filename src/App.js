@@ -29,7 +29,7 @@ const Wrapper = styled.div`
 `;
 
 function AppWrapper() {
-  const [themeMode, setThemeMode] = useState("dark");
+  const [themeMode, setThemeMode] = useState("light");
 
   const toggleTheme = () => {
     setThemeMode((prev) => (prev === "dark" ? "light" : "dark"));

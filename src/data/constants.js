@@ -89,11 +89,11 @@ export const skills = [
       //   name: "Graph Ql",
       //   image: "https://www.vectorlogo.zone/logos/graphql/graphql-icon.svg",
       // },
-      {
-        name: "Python",
-        image:
-          "https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg",
-      },
+      // {
+      //   name: "Python",
+      //   image:
+      //     "https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg",
+      // },
       // {
       //   name: "Flask",
       //   image:

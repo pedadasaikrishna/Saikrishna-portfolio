@@ -1,7 +1,7 @@
 import React from "react";
 import { VerticalTimeline } from "react-vertical-timeline-component";
 import "react-vertical-timeline-component/style.min.css";
-import styled from "styled-components";
+import { styled, useTheme } from "styled-components";
 import { education } from "../../data/constants";
 import Educationcard from "../cards/Educationcard";
 
@@ -49,10 +49,11 @@ const Desc = styled.div`
     margin-bottom: 20px;
     padding: 20px;
   }
-
 `;
 
 const Education = () => {
+  const theme = useTheme();
+
   return (
     <Container id="Education">
       <Wrapper>
@@ -68,7 +69,7 @@ const Education = () => {
           Here’s a glimpse into the experiences that have defined my path." 🌟
         </Desc>
 
-        <VerticalTimeline>
+        <VerticalTimeline lineColor={theme.text_primary}>
           {education.map((education, index) => (
             <Educationcard key={`education-${index}`} education={education} />
           ))}

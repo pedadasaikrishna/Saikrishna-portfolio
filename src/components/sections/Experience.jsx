@@ -1,5 +1,3 @@
-
-
 import { Link } from "react-router-dom";
 import React from "react";
 import styled from "styled-components";
@@ -43,7 +41,7 @@ const ExperienceCard = styled.div`
   width: 100%;
   max-width: 600px;
   padding: 24px;
-  background-color: rgba(17, 25, 40, 0.9);
+  background-color: ${({ theme }) => theme.bg};
   border: 1px solid rgba(255, 255, 255, 0.125);
   border-radius: 12px;
   box-shadow: rgba(23, 92, 230, 0.1) 0px 4px 24px;
@@ -51,11 +49,15 @@ const ExperienceCard = styled.div`
 
   &:hover {
     transform: translateY(-9px); /* Slight lift */
-    background-color: rgba(23, 92, 230, 0.1); /* Subtle background color change */
-    box-shadow: 
-      0 0 20px rgba(23, 92, 230, 0.6), /* Glow effect */
-      0 0 30px rgba(23, 92, 230, 0.5), /* Inner glow */
-      rgba(23, 92, 230, 0.4) 0px 8px 32px; /* Increased shadow */
+    background-color: rgba(
+      23,
+      92,
+      230,
+      0.1
+    ); /* Subtle background color change */
+    box-shadow: 0 0 20px rgba(23, 92, 230, 0.6),
+      /* Glow effect */ 0 0 30px rgba(23, 92, 230, 0.5),
+      /* Inner glow */ rgba(23, 92, 230, 0.4) 0px 8px 32px; /* Increased shadow */
   }
 
   @media (max-width: 768px) {
@@ -129,7 +131,7 @@ const AlbumButtonLink = styled(Link)`
   font-size: 14px;
   background: linear-gradient(to right, #ff8a00, #e52e71);
   color: white;
-    padding: 5px 9px;
+  padding: 5px 9px;
   border-radius: 6px;
   display: inline-block;
   width: fit-content;
@@ -158,39 +160,52 @@ const Experience = () => {
     <Container id="Experience">
       <Wrapper>
         <Title>Experience</Title>
-          
-        <ExperienceCard>
-  <PositionTitle>Full Stack Developer - Main Tech Role 💻🚀</PositionTitle>
-  <CompanyName>PsyShell.co - Mental Health Platform 🧠❤️</CompanyName>
-  <ExperienceDescription>
-    Took the lead as a Full Stack Developer for PsyShell.co, a platform focused on improving mental health through AI-powered solutions. 
-    Led the development of key modules, integrating backend APIs with a seamless frontend experience. Enhanced platform performance, 
-    security, and responsiveness by utilizing cutting-edge technologies like Html, Css, js, and MySQL 🛠️🔐.
-    Collaborated with cross-functional teams to refine user interfaces and ensure a smooth user journey 🌐👥. 
-    This role greatly strengthened my problem-solving skills and deepened my understanding of building scalable web applications.
-  </ExperienceDescription>
-  <Duration>Ongoing since January  2025</Duration>
-  <div style={{ display: 'flex', gap: '12px' }}> 
-  <AlbumButtonLink to="/album/PsyShell" target="_self">View Album</AlbumButtonLink>
-  <AlbumButtonLink target="_blank" to='http://psyshell.co/'>App Link</AlbumButtonLink>
-</div>
-
-
-</ExperienceCard>
 
         <ExperienceCard>
-  <PositionTitle>Participated in CongniVit Hackathon</PositionTitle>
-  <CompanyName>Organized by Vishnu Institute of Technology</CompanyName>
-  <ExperienceDescription>
-    Participated in a hackathon focused on developing a fitness cam monitoring system 🏋️‍♂️📷. 
-    The project aimed to track workout postures and angles, offering real-time feedback and suggestions for improvements 💪🔧. 
-    This experience enhanced my skills in AI, pose estimation, and real-time data processing 🤖💻. 
-    Earned a certificate of participation 🏅 and valuable insights for future fitness-tech innovations.
-  </ExperienceDescription>
-  <Duration>16/12/2024</Duration>
-  <AlbumButtonLink to="/album/CongniVit" target="_self">View Album</AlbumButtonLink>
+          <PositionTitle>
+            Full Stack Developer - Main Tech Role 💻🚀
+          </PositionTitle>
+          <CompanyName>PsyShell.co - Mental Health Platform 🧠💖</CompanyName>
+          <ExperienceDescription>
+            Took the lead as a Full Stack Developer for PsyShell.co, a platform
+            focused on improving mental health through AI-powered solutions. Led
+            the development of key modules, integrating backend APIs with a
+            seamless frontend experience. Enhanced platform performance,
+            security, and responsiveness by utilizing cutting-edge technologies
+            like Html, Css, js, and MySQL 🛠️🔐. Collaborated with
+            cross-functional teams to refine user interfaces and ensure a smooth
+            user journey 🌐👥. This role greatly strengthened my problem-solving
+            skills and deepened my understanding of building scalable web
+            applications.
+          </ExperienceDescription>
+          <Duration>Ongoing since January 2025</Duration>
+          <div style={{ display: "flex", gap: "12px" }}>
+            <AlbumButtonLink to="/album/PsyShell" target="_self">
+              View Album
+            </AlbumButtonLink>
+            <AlbumButtonLink target="_blank" to="http://psyshell.co/">
+              App Link
+            </AlbumButtonLink>
+          </div>
+        </ExperienceCard>
 
-</ExperienceCard>
+        <ExperienceCard>
+          <PositionTitle>Participated in CongniVit Hackathon</PositionTitle>
+          <CompanyName>Organized by Vishnu Institute of Technology</CompanyName>
+          <ExperienceDescription>
+            Participated in a hackathon focused on developing a fitness cam
+            monitoring system 🏋️‍♂️📷. The project aimed to track workout postures
+            and angles, offering real-time feedback and suggestions for
+            improvements 💪🔧. This experience enhanced my skills in AI, pose
+            estimation, and real-time data processing 🤖💻. Earned a certificate
+            of participation 🏅 and valuable insights for future fitness-tech
+            innovations.
+          </ExperienceDescription>
+          <Duration>16/12/2024</Duration>
+          <AlbumButtonLink to="/album/CongniVit" target="_self">
+            View Album
+          </AlbumButtonLink>
+        </ExperienceCard>
 
         <ExperienceCard>
           <PositionTitle>Participant - Failathon Event 🎤</PositionTitle>
@@ -203,7 +218,9 @@ const Experience = () => {
             organizers.
           </ExperienceDescription>
           <Duration>December 2023</Duration>
-          <AlbumButtonLink to="/album/Failathon" target="_self">View Album</AlbumButtonLink>
+          <AlbumButtonLink to="/album/Failathon" target="_self">
+            View Album
+          </AlbumButtonLink>
         </ExperienceCard>
 
         <ExperienceCard>

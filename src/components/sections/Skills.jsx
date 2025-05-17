@@ -1,9 +1,3 @@
-
-
-
-
-
-
 import React from "react";
 import styled from "styled-components";
 import { skills } from "../../data/constants";
@@ -78,17 +72,19 @@ const SkillsContainer = styled.div`
 const Skill = styled.div`
   width: 100%;
   max-width: 500px;
-  background-color: rgba(17, 25, 40, 0.83);
+  background-color: ${({ theme }) => theme.bg};
   border: 1px solid rgba(255, 255, 255, 0.125);
   box-shadow: rgba(23, 92, 230, 0.15) 0px 4px 24px;
   border-radius: 16px;
   padding: 18px 36px;
-  transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out;
   cursor: pointer;
   &:hover {
     transform: translateY(-5px);
     background-color: rgba(23, 92, 230, 0.1);
-    box-shadow: 0 0 20px rgba(23, 92, 230, 0.6), 0 0 30px rgba(23, 92, 230, 0.5), rgba(23, 92, 230, 0.4) 0px 8px 32px;
+    box-shadow: 0 0 20px rgba(23, 92, 230, 0.6), 0 0 30px rgba(23, 92, 230, 0.5),
+      rgba(23, 92, 230, 0.4) 0px 8px 32px;
   }
   @media (max-width: 768px) {
     max-width: 400px;
@@ -119,7 +115,7 @@ const SkillList = styled.div`
 const SkillItem = styled.div`
   font-size: 16px;
   font-weight: 400;
-  color: ${({ theme }) => theme.text_primary + 80};
+  color: ${({ theme }) => theme.text_primary};
   border: 1px solid ${({ theme }) => theme.text_primary + 80};
   border-radius: 12px;
   padding: 12px 16px;

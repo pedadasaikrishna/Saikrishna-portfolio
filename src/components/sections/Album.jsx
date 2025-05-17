@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { hackathons } from '../../data/imagesforalbum';
-import { styled, ThemeProvider } from 'styled-components';
-import { darkTheme } from '../../utils/Themes';
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { hackathons } from "../../data/imagesforalbum";
+import { styled, ThemeProvider } from "styled-components";
+import { darkTheme } from "../../utils/Themes";
 
 const AlbumContainer = styled.div`
   width: 90%;
@@ -53,7 +53,10 @@ const AlbumTitle = styled.h1`
 
 const AlbumImages = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(${({ $minWidth }) => $minWidth}, 1fr));
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(${({ $minWidth }) => $minWidth}, 1fr)
+  );
   gap: 1.5rem;
   transition: all 0.3s ease;
 
@@ -119,7 +122,13 @@ const StyledHR = styled.hr`
   width: 80%;
   background: linear-gradient(
     90deg,
-    #4f46e5, #6ee7b7, #facc15, #fb7185, #38bdf8, #a78bfa, #4f46e5
+    #4f46e5,
+    #6ee7b7,
+    #facc15,
+    #fb7185,
+    #38bdf8,
+    #a78bfa,
+    #4f46e5
   );
   background-size: 300%;
   animation: gradient-move 2s linear infinite;
@@ -179,7 +188,7 @@ const CloseButton = styled.button`
   right: 2rem;
   background: transparent;
   border: none;
-  font-size: 2.0rem;
+  font-size: 2rem;
   color: #fff;
   cursor: pointer;
   z-index: 1100;
@@ -190,12 +199,6 @@ const CloseButton = styled.button`
     transform: scale(1.2);
     color: #ff4d4d;
   }
-
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(255, 77, 77, 0.6);
-  }
-
   @media (max-width: 480px) {
     font-size: 2rem;
     top: 1rem;
@@ -206,22 +209,26 @@ const CloseButton = styled.button`
 const Album = () => {
   const { hackathonName } = useParams();
   const images = hackathons[hackathonName] || [];
-  const [imageSize, setImageSize] = useState(hackathons[`${hackathonName}Size`] || ['300px', 'auto']);
+  const [imageSize, setImageSize] = useState(
+    hackathons[`${hackathonName}Size`] || ["300px", "auto"]
+  );
   const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth <= 768) {
-        setImageSize(hackathons[`${hackathonName}SizeSmall`] || ['150px', 'auto']);
+        setImageSize(
+          hackathons[`${hackathonName}SizeSmall`] || ["150px", "auto"]
+        );
       } else {
-        setImageSize(hackathons[`${hackathonName}Size`] || ['300px', 'auto']);
+        setImageSize(hackathons[`${hackathonName}Size`] || ["300px", "auto"]);
       }
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
     handleResize();
 
-    return () => window.removeEventListener('resize', handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, [hackathonName]);
 
   const closeModal = () => setSelectedImage(null);
@@ -234,7 +241,10 @@ const Album = () => {
           <StyledHR />
           <AlbumImages $minWidth={imageSize[0]}>
             {images.map((imageUrl, index) => (
-              <AlbumImageWrapper key={index} onClick={() => setSelectedImage(imageUrl)}>
+              <AlbumImageWrapper
+                key={index}
+                onClick={() => setSelectedImage(imageUrl)}
+              >
                 <AlbumImage src={imageUrl} alt={`hackathon-image-${index}`} />
                 <Overlay>Image {index + 1}</Overlay>
               </AlbumImageWrapper>
@@ -245,10 +255,15 @@ const Album = () => {
         {selectedImage && (
           <>
             <ImageModal onClick={closeModal}>
-              <ModalImage src={selectedImage} alt="Enlarged" onClick={(e) => e.stopPropagation()} />
+              <ModalImage
+                src={selectedImage}
+                alt="Enlarged"
+                onClick={(e) => e.stopPropagation()}
+              />
             </ImageModal>
-            <CloseButton onClick={closeModal} aria-label="Close modal">✖</CloseButton>
-
+            <CloseButton onClick={closeModal} aria-label="Close modal">
+              ✖
+            </CloseButton>
           </>
         )}
       </Body>

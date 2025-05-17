@@ -1,9 +1,7 @@
-
-
 import React, { useRef, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import emailjs from "@emailjs/browser";
- import axios from "axios";
+import axios from "axios";
 
 // Animations
 const fadeIn = keyframes`
@@ -76,9 +74,10 @@ const ContactForm = styled.form`
   max-width: 600px;
   display: flex;
   flex-direction: column;
-  background-color: rgba(17, 25, 40, 0.83);
+  background-color: ${({ theme }) => theme.bg};
   border: 1px solid rgba(255, 255, 255, 0.125);
   padding: 32px;
+  border: 1.5px solid rgba(0, 0, 0, 0.37);
   border-radius: 12px;
   box-shadow: rgba(23, 92, 230, 0.1) 0px 4px 24px;
   animation: ${fadeIn} 0.5s ease-in-out;
@@ -117,24 +116,25 @@ const ContactInputMessage = styled(ContactInput).attrs({ as: "textarea" })`
 `;
 
 const ContactButton = styled.button`
-  background: hsla(271, 100%, 50%, 1);
+  background: rgb(240, 211, 255); /* Softer lavender for light mode */
   padding: 13px 16px;
   border-radius: 12px;
   border: none;
-  color: ${({ theme }) => theme.text_primary};
+  color: ${({ theme }) =>
+    theme.text_primary}; /* Ensure this is dark in light theme */
   font-size: 18px;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.3s, transform 0.3s;
   &:hover {
-    background-color: hsla(271, 100%, 45%, 1);
+    background-color: rgba(150, 120, 200, 0.9); /* Soft purple hover */
     transform: translateY(-2px);
   }
   &:active {
     transform: scale(0.98);
   }
   &[disabled] {
-    background-color: grey;
+    background-color: #cccccc;
     cursor: not-allowed;
   }
   @media (max-width: 768px) {
@@ -145,7 +145,7 @@ const ContactButton = styled.button`
 
 const Heading = styled.h1`
   text-align: center;
-  color: ${({ theme }) => theme.primary};
+  color: rgb(233, 190, 255); /* Softer lavender for light mode */
   font-size: 24px;
   @media (max-width: 768px) {
     font-size: 18px;
@@ -164,9 +164,9 @@ const Heading = styled.h1`
 // `;
 // Filtering the `isSuccess` prop
 const StatusMessage = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'isSuccess',
+  shouldForwardProp: (prop) => prop !== "isSuccess",
 })`
-  background-color: ${(props) => (props.isSuccess ? 'green' : 'red')};
+  background-color: ${(props) => (props.isSuccess ? "green" : "red")};
   color: white;
   padding: 10px;
   border-radius: 5px;
@@ -176,39 +176,41 @@ const Contact = () => {
   const [statusMessage, setStatusMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setIsSubmitting(true);
+    const formData = {
+      from_email: form.current.from_email.value,
+      from_name: form.current.from_name.value,
+      subject: form.current.subject.value,
+      message: form.current.message.value,
+    };
 
-  const formData = {
-    from_email: form.current.from_email.value,
-    from_name: form.current.from_name.value,
-    subject: form.current.subject.value,
-    message: form.current.message.value,
+    try {
+      // 1. Save to MongoDB
+      await axios.post(
+        "https://saikrishna-portfolio.onrender.com/contact",
+        formData
+      );
+
+      // 2. Send email via EmailJS
+      await emailjs.sendForm(
+        "service_vw2a5qb",
+        "template_11miw95",
+        form.current,
+        "7hW1qWdtrW8zERMVZ"
+      );
+
+      setStatusMessage("Message Sent Successfully! 🎉");
+      form.current.reset();
+    } catch (error) {
+      console.error("Error:", error);
+      setStatusMessage("Failed to send message. Please try again later.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
-
-  try {
-    // 1. Save to MongoDB
-    await axios.post("https://saikrishna-portfolio.onrender.com/contact", formData);
-
-    // 2. Send email via EmailJS
-    await emailjs.sendForm(
-      "service_vw2a5qb",
-      "template_11miw95",
-      form.current,
-      "7hW1qWdtrW8zERMVZ"
-    );
-
-    setStatusMessage("Message Sent Successfully! 🎉");
-    form.current.reset();
-  } catch (error) {
-    console.error("Error:", error);
-    setStatusMessage("Failed to send message. Please try again later.");
-  } finally {
-    setIsSubmitting(false);
-  }
-};
 
   return (
     <Container id="Contact">
